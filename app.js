@@ -22,9 +22,13 @@ app.get('/', (req, res) => {
 
 //create a listing route
 app.get('/testListing', async(req, res) => {
-    let sampleListing = new Listing({
+let sampleListing = new Listing({
         title: "My New Villa",
         description: "By the beach",
+        image: {
+            filename: "listingimage",
+            url: "https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHRyYXZlbHxlbnwwfHwwfHx8MA%3D%3D&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=60"
+        },
         price: 1300,
         location: "Calangute , Goa",
         country: "India",
