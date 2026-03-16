@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const Listing = require('./models/listing.js');
+const path = require('path');
+
 
 //connect to MongoDB or database
 const MONGO_URL = 'mongodb://127.0.0.1:27017/Wanderlust';
@@ -15,28 +17,21 @@ async function main() {
     await mongoose.connect(MONGO_URL);
 }
 
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
 //create a home API
 app.get('/', (req, res) => {
     res.send('Welcome to the Home API or root');
 });
 
-//create a listing route
-app.get('/testListing', async(req, res) => {
-let sampleListing = new Listing({
-        title: "My New Villa",
-        description: "By the beach",
-        image: {
-            filename: "listingimage",
-            url: "https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHRyYXZlbHxlbnwwfHwwfHx8MA%3D%3D&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=60"
-        },
-        price: 1300,
-        location: "Calangute , Goa",
-        country: "India",
-    });
-    await sampleListing.save();
-    console.log("sample listing saved to database");
-    res.send("successfully created a listing");
-});
+//index route for listings
+app.get("/listings", async (req, res) => {
+    const allListings = await Listing.find({});
+    res.render("listings/index.ejs", {allListings}); 
+})
+
+
 
 //creating a server
 app.listen (8080, () => {
