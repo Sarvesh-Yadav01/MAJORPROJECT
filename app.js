@@ -5,7 +5,7 @@ const Listing = require('./models/listing.js');
 const path = require('path');
 
 
-//connect to MongoDB or database
+//Connect to MongoDB or Database
 const MONGO_URL = 'mongodb://127.0.0.1:27017/Wanderlust';
 main().then(() => {
     console.log('Connected to MongoDB');
@@ -19,21 +19,26 @@ async function main() {
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+app.use(express.urlencoded({extended: true}));
 
-//create a home API
+//Home Route
 app.get('/', (req, res) => {
     res.send('Welcome to the Home API or root');
 });
 
-//index route for listings
+//Index Route for listings
 app.get("/listings", async (req, res) => {
     const allListings = await Listing.find({});
     res.render("listings/index.ejs", {allListings}); 
 })
 
-
-
-//creating a server
+//Show Route for listings
+app.get("/listings/:id", async (req, res) => {
+    let {id} = req.params;
+    const listing = await Listing.findById(id);
+    res.render("listings/show.ejs", {listing});
+});
+//Creating a Server
 app.listen (8080, () => {
     console.log('Server is running on port 8080');
 });
