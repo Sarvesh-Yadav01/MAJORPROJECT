@@ -21,7 +21,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({extended: true}));
 
-//Home Route
+//Home Route or Root Route
 app.get('/', (req, res) => {
     res.send('Welcome to the Home API or root');
 });
@@ -32,7 +32,7 @@ app.get("/listings", async (req, res) => {
     res.render("listings/index.ejs", {allListings}); 
 })
 
-//New Route
+//New Route for listings
 app.get("/listings/new", (req, res) => {
     res.render("listings/new.ejs");
 });
@@ -49,6 +49,13 @@ app.post("/listings", async (req, res) => {
     const newListing = new Listing(req.body.listing);
     await newListing.save();
     res.redirect("/listings");
+});
+
+//Edit Route for listings
+app.get("/listings/:id/edit", async (req, res) => {
+    let {id} = req.params;
+    const listing = await Listing.findById(id);
+    res.render("listings/edit.ejs", {listing});
 });
 
 //Creating a Server
